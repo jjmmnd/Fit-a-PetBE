@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface WalkRecordRepository extends JpaRepository<WalkRecord, Integer> {
 
-    // 날짜 기준 월별 조회
-    List<WalkRecord> findByWalkMonth(LocalDate startDate, LocalDate endDate);
+    // 날짜 기준 월별 조회 - 날짜 범위
+    List<WalkRecord> findByWalkDateBetween(LocalDate startDate, LocalDate endDate);
 
     // 특정 날짜 조회
     List<WalkRecord> findByWalkDate(LocalDate date);
