@@ -22,16 +22,20 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String nickname;
+
     @Column(name = "profile_url", columnDefinition = "text")
     private String profileUrl;
 
     private MemberType memberType;
-    private String password;
-    private String nickname;
     private String residence;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
