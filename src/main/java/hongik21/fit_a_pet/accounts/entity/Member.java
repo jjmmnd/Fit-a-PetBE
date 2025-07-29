@@ -34,7 +34,6 @@ public class Member {
     private MemberType memberType;
     private String residence;
 
-    @CreatedDate
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP", updatable = false)
     private LocalDateTime createdAt;
 
