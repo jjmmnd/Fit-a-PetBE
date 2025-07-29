@@ -11,17 +11,19 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WalkRecordResponseDTO {
 
-    private int record_id;
+    private int recordId;
     // 문자열로 받아서 LocalTime, LocalDate로 변경하는게 일반적이라고 함
-    private String walk_date;
-    private String walk_start;
-    private String walk_end;
+    private String walkDate;
+    private String walkStart;
+    private String walkEnd;
 
     private Float distance;
     private Integer rating;
     private String memo;
 
-    private Integer pet_id;
-    private Integer user_id;
+    private Integer petId;
+    private Integer userId;
+
+    private String Address;
 
 }

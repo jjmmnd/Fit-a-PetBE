@@ -26,27 +26,28 @@ public class WalkRecordService {
     public WalkRecordResponseDTO save(WalkRecordRequestDTO dto){
         WalkRecord record = new WalkRecord();
 
-        record.setWalk_date(LocalDate.parse(dto.getWalk_date()));
-        record.setWalk_start(LocalTime.parse(dto.getWalk_start()));
-        record.setWalk_end(LocalTime.parse(dto.getWalk_end()));
+        record.setWalkDate(LocalDate.parse(dto.getWalkDate()));
+        record.setWalkStart(LocalTime.parse(dto.getWalkStart()));
+        record.setWalkEnd(LocalTime.parse(dto.getWalkEnd()));
         record.setDistance(dto.getDistance());
         record.setRating(dto.getRating());
         record.setMemo(dto.getMemo());
-        record.setPet_id(dto.getPet_id());
-        record.setUser_id(dto.getUser_id());
+        record.setPetId(dto.getPetId());
+        record.setUserId(dto.getUserId());
 
         WalkRecord saved = repository.save(record);
 
         return new WalkRecordResponseDTO(
-                saved.getRecord_id(),
-                saved.getWalk_date().toString(),
-                saved.getWalk_start().toString(),
-                saved.getWalk_end().toString(),
+                saved.getRecordId(),
+                saved.getWalkDate().toString(),
+                saved.getWalkStart().toString(),
+                saved.getWalkEnd().toString(),
                 saved.getDistance(),
                 saved.getRating(),
                 saved.getMemo(),
-                saved.getPet_id(),
-                saved.getUser_id()
+                saved.getPetId(),
+                saved.getUserId(),
+                saved.getAddress()
         );
     }
 
@@ -60,15 +61,16 @@ public class WalkRecordService {
         return repository.findByWalkDateBetween(startDate, endDate)
                 .stream()
                 .map(r ->  new WalkRecordResponseDTO(  // 각 walkRecord 객체 r을 WalkRecordResponseDTO 객체로 변환
-                        r.getRecord_id(),
-                        r.getWalk_date().toString(),
-                        r.getWalk_start().toString(),
-                        r.getWalk_end().toString(),
+                        r.getRecordId(),
+                        r.getWalkDate().toString(),
+                        r.getWalkStart().toString(),
+                        r.getWalkEnd().toString(),
                         r.getDistance(),
                         r.getRating(),
                         r.getMemo(),
-                        r.getPet_id(),
-                        r.getUser_id()
+                        r.getPetId(),
+                        r.getUserId(),
+                        r.getAddress()
                 )) // List<WalkRecord> -> 스트림형태
                 .collect(Collectors.toList()); // List<WalkRecordResponseDto> 형태로 변환
     }
@@ -80,16 +82,21 @@ public class WalkRecordService {
         return repository.findByWalkDate(date)
                 .stream()
                 .map(r -> new WalkRecordResponseDTO(
-                        r.getRecord_id(),
-                        r.getWalk_date().toString(),
-                        r.getWalk_start().toString(),
-                        r.getWalk_end().toString(),
+                        r.getRecordId(),
+                        r.getWalkDate().toString(),
+                        r.getWalkStart().toString(),
+                        r.getWalkEnd().toString(),
                         r.getDistance(),
                         r.getRating(),
                         r.getMemo(),
-                        r.getPet_id(),
-                        r.getUser_id()
+                        r.getPetId(),
+                        r.getUserId(),
+                        r.getAddress()
                 ))
                 .collect(Collectors.toList());
     }
+
+
+    // 기능 4. 산책 기록 편집
+
 }
