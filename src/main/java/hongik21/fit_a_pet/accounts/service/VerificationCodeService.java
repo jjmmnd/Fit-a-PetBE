@@ -26,7 +26,7 @@ public class VerificationCodeService {
     @Transactional
     @Scheduled(cron = "0 0 12 * * ?")
     public void deleteExpiredVerificationCodes() {
-        verificationCodeRepository.deletedByExpiryTimeBefore(LocalDateTime.now());
+        verificationCodeRepository.deleteByExpiryTimeBefore(LocalDateTime.now());
     }
 
 }
