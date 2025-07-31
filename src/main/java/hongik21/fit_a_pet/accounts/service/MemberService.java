@@ -1,8 +1,14 @@
 package hongik21.fit_a_pet.accounts.service;
 
+import hongik21.fit_a_pet.accounts.dto.JoinRequest;
+import hongik21.fit_a_pet.accounts.dto.JoinResponse;
+import hongik21.fit_a_pet.accounts.entity.Member;
+import hongik21.fit_a_pet.accounts.entity.MemberType;
 import hongik21.fit_a_pet.accounts.entity.VerificationCode;
 import hongik21.fit_a_pet.accounts.repository.MemberRepository;
 import hongik21.fit_a_pet.accounts.repository.VerificationCodeRepository;
+import hongik21.fit_a_pet.global.exception.ApplicationException;
+import hongik21.fit_a_pet.global.exception.CustomErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +29,8 @@ public class MemberService {
 
     private final JavaMailSender mailSender;
     private final VerificationCodeRepository verificationCodeRepository;
+    private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     /**
      * 이메일로 인증 코드를 보내는 함수
@@ -78,11 +87,43 @@ public class MemberService {
 
 
     // 이메일로 보냈던 코드와 인증한 코드가 일치하는지 확인하는 함수
-    public boolean verifyMailCode(String email, String code) {
-        return verificationCodeRepository.findByEmailAndCode(email, code)
+    public void verifyMailCode(String email, String code) throws ApplicationException{
+        verificationCodeRepository.findByEmailAndCode(email, code)
                 .map(vc -> vc.getExpiryTime().isAfter(LocalDateTime.now()))
-                .isPresent();
+                .orElseThrow(() -> new ApplicationException(CustomErrorCode.EMAIL_VERIFY_FAILED));
     }
 
-    
+    // 회원가입 로직
+    public JoinResponse join(JoinRequest request) throws ApplicationException {
+
+        // 인증된 이메일인지 체크
+        verificationCodeRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ApplicationException(CustomErrorCode.EMAIL_NOT_VERIFIED));
+
+        // 이전에 가입했던 이메일인지 체크
+        memberRepository.findByEmail(request.getEmail())
+                .ifPresent(member -> {
+                    throw new ApplicationException(CustomErrorCode.EMAIL_EXISTED);
+                });
+
+        String encodePassword = passwordEncoder.encode(request.getPassword());
+
+        Member member = Member.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .nickname(request.getNickname())
+                .password(encodePassword)
+                .memberType(MemberType.valueOf(MemberType.GENERAL.toString()))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        memberRepository.save(member);
+
+        return JoinResponse.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .nickname(member.getNickname())
+                .createdAt(member.getCreatedAt())
+                .build();
+    }
 }

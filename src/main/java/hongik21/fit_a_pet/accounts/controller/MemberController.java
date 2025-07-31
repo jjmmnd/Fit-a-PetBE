@@ -1,12 +1,15 @@
 package hongik21.fit_a_pet.accounts.controller;
 
+import hongik21.fit_a_pet.accounts.dto.JoinRequest;
 import hongik21.fit_a_pet.accounts.dto.MailRequest;
 import hongik21.fit_a_pet.accounts.dto.MailVerifyRequest;
+import hongik21.fit_a_pet.accounts.dto.JoinResponse;
 import hongik21.fit_a_pet.accounts.service.MemberService;
 import hongik21.fit_a_pet.global.CommonResponse;
+import hongik21.fit_a_pet.global.exception.ApplicationException;
 import hongik21.fit_a_pet.global.exception.CustomErrorCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,11 +30,15 @@ public class MemberController {
     }
 
     @PostMapping("/email/verify")
-    public CommonResponse<Object> verifyMailCode(@RequestBody MailVerifyRequest request) {
+    public CommonResponse<Object> verifyMailCode(@RequestBody MailVerifyRequest request) throws ApplicationException {
 
-        if(memberService.verifyMailCode(request.getEmail(), request.getCode()))
-            return CommonResponse.onSuccess(null, "이메일 인증을 성공했습니다.");
-        else
-            return CommonResponse.onFailure(null, CustomErrorCode.EMAIL_VERIFY_FAILED);
+        memberService.verifyMailCode(request.getEmail(), request.getCode());
+        return CommonResponse.onSuccess(null, "이메일 인증을 성공했습니다.");
+    }
+
+    @PostMapping("/signup")
+    public CommonResponse<JoinResponse> signup(@RequestBody @Valid JoinRequest request) throws ApplicationException {
+        JoinResponse response = memberService.join(request);
+        return CommonResponse.onSuccess(response,"회원가입을 성공했습니다.");
     }
 }
