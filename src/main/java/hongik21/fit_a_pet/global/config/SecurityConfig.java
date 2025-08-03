@@ -66,13 +66,13 @@ public class SecurityConfig {
         // 요청 URI 권한 설정
         http.authorizeHttpRequests((authorize)->
                 authorize
-                        .requestMatchers("/", "/api/**").permitAll() // 일단 토큰 없이 테스트 가능하게 해둠
+                        .requestMatchers("/", "/error/**").permitAll()
                         // 로그인 및 가입 로직
                         .requestMatchers("/api/users/login/**").permitAll()
                         .requestMatchers("/api/users/signup/**").permitAll()
                         .requestMatchers("/api/users/email/**").permitAll()
-                        // DefaultExceptionHandler 처리를 위한
-                        .requestMatchers("/error/**").permitAll()
+                        .requestMatchers("/api/users/logout").authenticated()
+                        .requestMatchers("/api/**").permitAll() // 나중에 알아서 추가 ..
                         .anyRequest().authenticated()
         );
 

@@ -161,4 +161,14 @@ public class MemberService {
                 .build();
 
     }
+
+    public void logout(String email) throws ApplicationException {
+
+        Long memberId = memberRepository.findByEmail(email)
+                .map(Member::getId)
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        // 토큰 무효화
+        refreshTokenService.delete(memberId);
+    }
 }

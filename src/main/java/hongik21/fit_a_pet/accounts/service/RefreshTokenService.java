@@ -27,4 +27,9 @@ public class RefreshTokenService {
         refreshTokenRepository.findByToken(refreshToken)
                 .ifPresent(refreshTokenRepository::delete);
     }
+
+    public void delete(Long memberId) {
+        refreshTokenRepository.findByMemberId(memberId)
+                .ifPresent(refreshTokenRepository::delete);
+    }
 }
