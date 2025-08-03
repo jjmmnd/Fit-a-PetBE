@@ -8,6 +8,10 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum CustomErrorCode {
 
+    // 9000: 일반 에러
+    ACCESS_DENIED(HttpStatus.UNAUTHORIZED, 9000, "인증이 필요합니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN, 9001, "금지된 요청입니다."),
+
     // 1000: Global Error
     INVALID_REQUEST_DTO(HttpStatus.BAD_REQUEST, 1000, "요청 데이터가 조건에 만족하지 않습니다."),
 
@@ -18,7 +22,8 @@ public enum CustomErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, 3000, "유저를 찾지 못했습니다."),
     EMAIL_VERIFY_FAILED(HttpStatus.BAD_REQUEST, 3001, "인증번호가 일치하지 않습니다."),
     EMAIL_NOT_VERIFIED(HttpStatus.BAD_REQUEST, 3002, "인증되지 않은 이메일로 회원가입을 시도했습니다."),
-    EMAIL_EXISTED(HttpStatus.BAD_REQUEST, 3003, "이미 가입된 이메일입니다.");
+    EMAIL_EXISTED(HttpStatus.BAD_REQUEST, 3003, "이미 가입된 이메일입니다."),
+    PASSWORD_NOT_MATCHED(HttpStatus.NOT_FOUND, 3004, "비밀번호가 올바르지 않습니다.");
 
 
     private final HttpStatus status;

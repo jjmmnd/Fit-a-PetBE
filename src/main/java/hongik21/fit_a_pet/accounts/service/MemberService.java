@@ -2,6 +2,8 @@ package hongik21.fit_a_pet.accounts.service;
 
 import hongik21.fit_a_pet.accounts.dto.JoinRequest;
 import hongik21.fit_a_pet.accounts.dto.JoinResponse;
+import hongik21.fit_a_pet.accounts.dto.LoginRequest;
+import hongik21.fit_a_pet.accounts.dto.LoginResponse;
 import hongik21.fit_a_pet.accounts.entity.Member;
 import hongik21.fit_a_pet.accounts.entity.MemberType;
 import hongik21.fit_a_pet.accounts.entity.VerificationCode;
@@ -9,17 +11,19 @@ import hongik21.fit_a_pet.accounts.repository.MemberRepository;
 import hongik21.fit_a_pet.accounts.repository.VerificationCodeRepository;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
 import hongik21.fit_a_pet.global.exception.CustomErrorCode;
+import hongik21.fit_a_pet.global.jwt.JwtProvider;
+import hongik21.fit_a_pet.global.jwt.TokenDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
@@ -29,8 +33,10 @@ public class MemberService {
 
     private final JavaMailSender mailSender;
     private final VerificationCodeRepository verificationCodeRepository;
-    private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+    private final MemberRepository memberRepository;
+    private final RefreshTokenService refreshTokenService;
 
     /**
      * 이메일로 인증 코드를 보내는 함수
@@ -125,5 +131,34 @@ public class MemberService {
                 .nickname(member.getNickname())
                 .createdAt(member.getCreatedAt())
                 .build();
+    }
+
+    public LoginResponse login(LoginRequest request) throws ApplicationException {
+
+        // 가입했는지 확인
+        Member member = memberRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        // 비밀번호 올바른지 확인
+        boolean matches = passwordEncoder.matches(request.getPassword(), member.getPassword());
+        if(!matches) {
+            throw new ApplicationException(CustomErrorCode.PASSWORD_NOT_MATCHED);
+        }
+
+        // 액세스, 리프레시 토큰 발급
+        TokenDto tokens = jwtProvider.createToken(member);
+
+        // 기존 리프레시 토큰 삭제
+        refreshTokenService.delete(tokens.refreshToken());
+
+        // 새로운 리프레시 토큰 저장
+        refreshTokenService.save(tokens.refreshToken(), member);
+
+        return LoginResponse.builder()
+                .id(member.getId())
+                .accessToken(tokens.accessToken())
+                .refreshToken(tokens.refreshToken())
+                .build();
+
     }
 }
