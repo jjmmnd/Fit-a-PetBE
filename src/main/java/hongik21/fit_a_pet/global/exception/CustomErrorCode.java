@@ -23,8 +23,11 @@ public enum CustomErrorCode {
     EMAIL_VERIFY_FAILED(HttpStatus.BAD_REQUEST, 3001, "인증번호가 일치하지 않습니다."),
     EMAIL_NOT_VERIFIED(HttpStatus.BAD_REQUEST, 3002, "인증되지 않은 이메일로 회원가입을 시도했습니다."),
     EMAIL_EXISTED(HttpStatus.BAD_REQUEST, 3003, "이미 가입된 이메일입니다."),
-    PASSWORD_NOT_MATCHED(HttpStatus.NOT_FOUND, 3004, "비밀번호가 올바르지 않습니다.");
+    PASSWORD_NOT_MATCHED(HttpStatus.NOT_FOUND, 3004, "비밀번호가 올바르지 않습니다."),
 
+    // 4000: Trail Error
+    TRAIL_CREATE_FAILED(HttpStatus.BAD_REQUEST, 4000, "산책기록 생성에 실패했습니다.")
+    ;
 
     private final HttpStatus status;
     private final Integer code;
