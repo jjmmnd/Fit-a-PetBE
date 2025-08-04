@@ -1,6 +1,8 @@
 package hongik21.fit_a_pet.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hongik21.fit_a_pet.global.jwt.CustomAccessDeniedHandler;
+import hongik21.fit_a_pet.global.jwt.CustomAuthenticationEntryPoint;
 import hongik21.fit_a_pet.global.jwt.JwtFilter;
 import hongik21.fit_a_pet.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtProvider jwtProvider;
+    private final JwtFilter jwtFilter;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -35,28 +39,40 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable);
+        http.cors(cors ->
+                cors.configurationSource(corsConfigurationSource())
+        );
 
+        http.csrf(AbstractHttpConfigurer::disable);
+
+        http.logout(AbstractHttpConfigurer::disable);
+
+        http.formLogin(AbstractHttpConfigurer::disable);
+
+        // 세션 미사용
         http.sessionManagement((session) ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        ); // 세션 미사용
+        );
 
-        http.httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable);
+        // before filter
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // TODO : JWT 관련 필터 설정 및 예외처리
+        // exception handler
+        http.exceptionHandling(conf -> conf
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
+        );
 
-        // 이거 맞는지 잘 몰루겟음
-        http.addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
         // 요청 URI 권한 설정
         http.authorizeHttpRequests((authorize)->
-                // 일단 개발 환경 ...
-                authorize.requestMatchers("/api/**").permitAll()
-                        // 로그인 로직
-                        .requestMatchers("/api/login/**").permitAll()
-                        // DefaultExceptionHandler 처리를 위한
-                        .requestMatchers("/error/**").permitAll()
+                authorize
+                        .requestMatchers("/", "/error/**").permitAll()
+                        // 로그인 및 가입 로직
+                        .requestMatchers("/api/users/login/**").permitAll()
+                        .requestMatchers("/api/users/signup/**").permitAll()
+                        .requestMatchers("/api/users/email/**").permitAll()
+                        .requestMatchers("/api/users/logout").authenticated()
+                        .requestMatchers("/api/**").permitAll() // 나중에 알아서 추가 ..
                         .anyRequest().authenticated()
         );
 
