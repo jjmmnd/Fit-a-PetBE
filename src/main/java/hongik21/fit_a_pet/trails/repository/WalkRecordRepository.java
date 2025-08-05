@@ -5,13 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface WalkRecordRepository extends JpaRepository<WalkRecord, Integer> {
 
     // 날짜 기준 월별 조회 - 날짜 범위
     List<WalkRecord> findByWalkDateBetween(LocalDate startDate, LocalDate endDate);
 
-    // 특정 날짜 조회
-    List<WalkRecord> findByWalkDate(LocalDate date);
+    // 단건 조회
+    Optional<WalkRecord> findByRecordIdAndMemberIdEmail(Long recordId, String email);
+    
 
 }

@@ -26,7 +26,8 @@ public enum CustomErrorCode {
     PASSWORD_NOT_MATCHED(HttpStatus.NOT_FOUND, 3004, "비밀번호가 올바르지 않습니다."),
 
     // 4000: Trail Error
-    TRAIL_CREATE_FAILED(HttpStatus.BAD_REQUEST, 4000, "산책기록 생성에 실패했습니다.")
+    TRAIL_CREATE_FAILED(HttpStatus.BAD_REQUEST, 4000, "산책 기록 생성에 실패했습니다."),
+    TRAIL_NOT_FOUND(HttpStatus.BAD_REQUEST,4001, "산책 기록을 찾을 수 없습니다.")
     ;
 
     private final HttpStatus status;
