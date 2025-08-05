@@ -39,6 +39,8 @@ public class WalkRecordService {
                 .walkEnd(LocalTime.parse(request.getWalkEnd()))
                 .distance(request.getDistance())
                 .address(request.getAddress())
+                .memo(request.getMemo())
+                .rating(request.getRating())
                 .build();
 
         try {
@@ -50,7 +52,10 @@ public class WalkRecordService {
                     .walkEnd(res.getWalkEnd().toString())
                     .distance(res.getDistance())
                     .petId(res.getPetId())
-                    .address(res.getAddress()).build();
+                    .address(res.getAddress())
+                    .memo(res.getMemo())
+                    .rating(res.getRating())
+                    .build();
         } catch (Exception e) {
             throw new ApplicationException(CustomErrorCode.TRAIL_CREATE_FAILED);
         }
@@ -65,23 +70,6 @@ public class WalkRecordService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
 
-        // statDate,endDate 사이의 walkRecord를 가져옴
-//        return repository.findByWalkDateBetween(startDate, endDate)
-//                .stream()
-//                .map(r ->  new WalkRecordResponseDTO(  // 각 walkRecord 객체 r을 WalkRecordResponseDTO 객체로 변환
-//                        r.getRecordId(),
-//                        r.getWalkDate().toString(),
-//                        r.getWalkStart().toString(),
-//                        r.getWalkEnd().toString(),
-//                        r.getDistance(),
-//                        r.getRating(),
-//                        r.getMemo(),
-//                        r.getPetId(),
-//                        r.getUserId(),
-//                        r.getAddress()
-//                )) // List<WalkRecord> -> 스트림형태
-//                .collect(Collectors.toList()); // List<WalkRecordResponseDto> 형태로 변환
-//    }
         try{
             return repository.findByWalkDateBetween(startDate, endDate)
                     .stream()
@@ -96,7 +84,7 @@ public class WalkRecordService {
                             r.getRating(),
                             r.getMemo()
                     ))
-                    .collect(Collectors.toUnmodifiableList());
+                    .toList();
         } catch (Exception e) {
             throw new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND);
         }

@@ -14,6 +14,6 @@ public class WalkRecordSaveRequest {
     private Integer petId;
 
     private String address;
-//    private Integer rating;
-//    private String memo;
+    private Integer rating;
+    private String memo;
 }

@@ -2,7 +2,6 @@ package hongik21.fit_a_pet.trails.controller;
 
 import hongik21.fit_a_pet.global.CommonResponse;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
-import hongik21.fit_a_pet.trails.dto.WalkRecordMonthlyRequest;
 import hongik21.fit_a_pet.trails.dto.WalkRecordMonthlyResponse;
 import hongik21.fit_a_pet.trails.dto.WalkRecordSaveRequest;
 import hongik21.fit_a_pet.trails.dto.WalkRecordSaveResponse;

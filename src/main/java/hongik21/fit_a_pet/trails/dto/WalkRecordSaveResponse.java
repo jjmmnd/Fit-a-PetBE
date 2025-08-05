@@ -20,7 +20,7 @@ public class WalkRecordSaveResponse {
     private Integer petId;
     private String address;
 
-//    private Integer rating;
-//    private String memo;
+    private Integer rating;
+    private String memo;
 
 }
