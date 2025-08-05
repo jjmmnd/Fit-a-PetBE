@@ -65,7 +65,7 @@ public class WalkRecordService {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND));
 
         try{
             return repository.findByWalkDateBetween(startDate, endDate)
@@ -92,7 +92,7 @@ public class WalkRecordService {
     public WalkRecordDetailResponse getRecordsDetail(Long recordId, String email){
 
         WalkRecord walkRecord = repository.findByRecordIdAndMemberIdEmail(recordId, email)
-                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND));
 
         try{
             return WalkRecordDetailResponse.builder()
@@ -113,7 +113,7 @@ public class WalkRecordService {
 
     // 기능 4. 산책 기록 편집
 
-    public WalkRecordEditResponse getRecordEdit(WalkRecordEditRequest request, Long recordId, String email){
+    public WalkRecordEditResponse editRecord(WalkRecordEditRequest request, Long recordId, String email){
         WalkRecord walkRecord = repository.findByRecordIdAndMemberIdEmail(recordId,email)
                 .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
 
@@ -136,5 +136,16 @@ public class WalkRecordService {
     }
 
     // 기능 5. 산책 기록 삭제
+
+    public void deleteRecord(Long recordId, String email){
+        WalkRecord walkRecord = repository.findByRecordIdAndMemberIdEmail(recordId,email)
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        try{
+            repository.delete(walkRecord);
+        } catch (Exception e) {
+            throw new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND);
+        }
+    }
 
 }

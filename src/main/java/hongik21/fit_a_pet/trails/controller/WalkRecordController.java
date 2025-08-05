@@ -63,8 +63,18 @@ public class WalkRecordController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
 
-        WalkRecordEditResponse response = walkRecordService.getRecordEdit(request, recordId,email);
+        WalkRecordEditResponse response = walkRecordService.editRecord(request, recordId,email);
         return CommonResponse.onSuccess(response,"산책 기록 수정에 성공했습니다.");
+    }
+
+
+    @DeleteMapping("/{recordId}")
+    public CommonResponse<?> deleteTrailRecord(@PathVariable Long recordId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        walkRecordService.deleteRecord(recordId,email);
+        return CommonResponse.onSuccess(null,"산책 기록 삭제에 성공했습니다");
     }
 
     @GetMapping("/doTest")
