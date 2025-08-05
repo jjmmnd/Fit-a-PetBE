@@ -14,6 +14,7 @@ public interface WalkRecordRepository extends JpaRepository<WalkRecord, Integer>
 
     // 단건 조회
     Optional<WalkRecord> findByRecordIdAndMemberIdEmail(Long recordId, String email);
-    
+
+
 
 }

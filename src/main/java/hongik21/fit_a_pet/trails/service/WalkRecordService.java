@@ -6,10 +6,7 @@ import hongik21.fit_a_pet.accounts.repository.MemberRepository;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
 import hongik21.fit_a_pet.global.exception.CustomErrorCode;
 import hongik21.fit_a_pet.trails.domain.WalkRecord;
-import hongik21.fit_a_pet.trails.dto.WalkRecordDetailResponse;
-import hongik21.fit_a_pet.trails.dto.WalkRecordMonthlyResponse;
-import hongik21.fit_a_pet.trails.dto.WalkRecordSaveRequest;
-import hongik21.fit_a_pet.trails.dto.WalkRecordSaveResponse;
+import hongik21.fit_a_pet.trails.dto.*;
 import hongik21.fit_a_pet.trails.repository.WalkRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -68,7 +65,7 @@ public class WalkRecordService {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND));
 
         try{
             return repository.findByWalkDateBetween(startDate, endDate)
@@ -95,7 +92,7 @@ public class WalkRecordService {
     public WalkRecordDetailResponse getRecordsDetail(Long recordId, String email){
 
         WalkRecord walkRecord = repository.findByRecordIdAndMemberIdEmail(recordId, email)
-                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND));
 
         try{
             return WalkRecordDetailResponse.builder()
@@ -116,5 +113,39 @@ public class WalkRecordService {
 
     // 기능 4. 산책 기록 편집
 
+    public WalkRecordEditResponse editRecord(WalkRecordEditRequest request, Long recordId, String email){
+        WalkRecord walkRecord = repository.findByRecordIdAndMemberIdEmail(recordId,email)
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        try{
+            return WalkRecordEditResponse.builder()
+                    .recordId(walkRecord.getRecordId())
+                    .walkDate(walkRecord.getWalkDate().toString())
+                    .walkStart(walkRecord.getWalkStart().toString())
+                    .walkEnd(walkRecord.getWalkEnd().toString())
+                    .distance(walkRecord.getDistance())
+                    .petId(walkRecord.getPetId())
+                    .address(walkRecord.getAddress())
+                    .rating(request.getRating())
+                    .memo(request.getMemo())
+                    .build();
+
+        }catch (Exception e){
+            throw new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND);
+        }
+    }
+
+    // 기능 5. 산책 기록 삭제
+
+    public void deleteRecord(Long recordId, String email){
+        WalkRecord walkRecord = repository.findByRecordIdAndMemberIdEmail(recordId,email)
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        try{
+            repository.delete(walkRecord);
+        } catch (Exception e) {
+            throw new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND);
+        }
+    }
 
 }
