@@ -66,7 +66,7 @@ public class WalkRecordService {
     public List<WalkRecordMonthlyResponse> getMonthlyRecords(String email, int year, int month){
 
         LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = LocalDate.of(year, month, 31);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
 
@@ -113,24 +113,8 @@ public class WalkRecordService {
             throw new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND);
         }
     }
-//    public List<WalkRecordResponseDTO> getDateRecords(String dateStr){
-//        LocalDate date = LocalDate.parse(dateStr);
-//        return repository.findByWalkDate(date)
-//                .stream()
-//                .map(r -> new WalkRecordResponseDTO(
-//                        r.getRecordId(),
-//                        r.getWalkDate().toString(),
-//                        r.getWalkStart().toString(),
-//                        r.getWalkEnd().toString(),
-//                        r.getDistance(),
-//                        r.getRating(),
-//                        r.getMemo(),
-//                        r.getPetId(),
-//                        r.getAddress()
-//                ))
-//                .collect(Collectors.toList());
-//    }
-
 
     // 기능 4. 산책 기록 편집
+
+
 }
