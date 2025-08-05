@@ -6,8 +6,9 @@ import hongik21.fit_a_pet.accounts.repository.MemberRepository;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
 import hongik21.fit_a_pet.global.exception.CustomErrorCode;
 import hongik21.fit_a_pet.trails.domain.WalkRecord;
-import hongik21.fit_a_pet.trails.dto.WalkRecordRequestDTO;
-import hongik21.fit_a_pet.trails.dto.WalkRecordResponseDTO;
+import hongik21.fit_a_pet.trails.dto.WalkRecordMonthlyResponse;
+import hongik21.fit_a_pet.trails.dto.WalkRecordSaveRequest;
+import hongik21.fit_a_pet.trails.dto.WalkRecordSaveResponse;
 import hongik21.fit_a_pet.trails.repository.WalkRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class WalkRecordService {
     private final MemberRepository memberRepository;
 
     // 기능 1. 산책 기록 저장
-    public WalkRecordResponseDTO register(String email, WalkRecordRequestDTO request) {
+    public WalkRecordSaveResponse register(String email, WalkRecordSaveRequest request) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
 
@@ -42,7 +43,7 @@ public class WalkRecordService {
 
         try {
             WalkRecord res = repository.save(walkRecord);
-            return WalkRecordResponseDTO.builder()
+            return WalkRecordSaveResponse.builder()
                     .recordId(res.getRecordId())
                     .walkDate(res.getWalkDate().toString())
                     .walkStart(res.getWalkStart().toString())
@@ -55,14 +56,16 @@ public class WalkRecordService {
         }
     }
 
-//
-//    // 기능 2. 월별 기록 조회
-//    public List<WalkRecordResponseDTO> getMonthlyRecords(int year, int month){
-//
-//        LocalDate startDate = LocalDate.of(year, month, 1);
-//        LocalDate endDate = LocalDate.of(year, month, 31);
-//
-//        // statDate,endDate 사이의 walkRecord를 가져옴
+    // 기능 2. 월별 기록 조회
+
+    public List<WalkRecordMonthlyResponse> getMonthlyRecords(String email, int year, int month){
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = LocalDate.of(year, month, 31);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        // statDate,endDate 사이의 walkRecord를 가져옴
 //        return repository.findByWalkDateBetween(startDate, endDate)
 //                .stream()
 //                .map(r ->  new WalkRecordResponseDTO(  // 각 walkRecord 객체 r을 WalkRecordResponseDTO 객체로 변환
@@ -79,6 +82,25 @@ public class WalkRecordService {
 //                )) // List<WalkRecord> -> 스트림형태
 //                .collect(Collectors.toList()); // List<WalkRecordResponseDto> 형태로 변환
 //    }
+        try{
+            return repository.findByWalkDateBetween(startDate, endDate)
+                    .stream()
+                    .map(r -> new WalkRecordMonthlyResponse(
+                            r.getRecordId(),
+                            r.getWalkDate().toString(),
+                            r.getWalkStart().toString(),
+                            r.getWalkEnd().toString(),
+                            r.getDistance(),
+                            r.getPetId(),
+                            r.getAddress(),
+                            r.getRating(),
+                            r.getMemo()
+                    ))
+                    .collect(Collectors.toUnmodifiableList());
+        } catch (Exception e) {
+            throw new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND);
+        }
+    }
 
     // 기능 3. 날짜별 기록 조회
 //    public List<WalkRecordResponseDTO> getDateRecords(String dateStr){
