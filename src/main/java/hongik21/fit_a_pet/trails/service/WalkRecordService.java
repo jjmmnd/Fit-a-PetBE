@@ -6,6 +6,7 @@ import hongik21.fit_a_pet.accounts.repository.MemberRepository;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
 import hongik21.fit_a_pet.global.exception.CustomErrorCode;
 import hongik21.fit_a_pet.trails.domain.WalkRecord;
+import hongik21.fit_a_pet.trails.dto.WalkRecordDetailResponse;
 import hongik21.fit_a_pet.trails.dto.WalkRecordMonthlyResponse;
 import hongik21.fit_a_pet.trails.dto.WalkRecordSaveRequest;
 import hongik21.fit_a_pet.trails.dto.WalkRecordSaveResponse;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -90,7 +90,29 @@ public class WalkRecordService {
         }
     }
 
-    // 기능 3. 날짜별 기록 조회
+    // 기능 3. 단건 기록 조회
+
+    public WalkRecordDetailResponse getRecordsDetail(Long recordId, String email){
+
+        WalkRecord walkRecord = repository.findByRecordIdAndMemberIdEmail(recordId, email)
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+
+        try{
+            return WalkRecordDetailResponse.builder()
+                    .recordId(walkRecord.getRecordId())
+                    .walkDate(walkRecord.getWalkDate().toString())
+                    .walkStart(walkRecord.getWalkStart().toString())
+                    .walkEnd(walkRecord.getWalkEnd().toString())
+                    .distance(walkRecord.getDistance())
+                    .petId(walkRecord.getPetId())
+                    .address(walkRecord.getAddress())
+                    .rating(walkRecord.getRating())
+                    .memo(walkRecord.getMemo())
+                    .build();
+        } catch (Exception e) {
+            throw new ApplicationException(CustomErrorCode.TRAIL_NOT_FOUND);
+        }
+    }
 //    public List<WalkRecordResponseDTO> getDateRecords(String dateStr){
 //        LocalDate date = LocalDate.parse(dateStr);
 //        return repository.findByWalkDate(date)

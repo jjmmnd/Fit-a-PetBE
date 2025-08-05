@@ -31,7 +31,7 @@ public class WalkRecord {
     private Integer petId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "member_id")
     private Member memberId;
 
     // 위치 정보

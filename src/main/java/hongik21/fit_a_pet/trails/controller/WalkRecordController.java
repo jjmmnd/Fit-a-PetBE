@@ -2,6 +2,7 @@ package hongik21.fit_a_pet.trails.controller;
 
 import hongik21.fit_a_pet.global.CommonResponse;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
+import hongik21.fit_a_pet.trails.dto.WalkRecordDetailResponse;
 import hongik21.fit_a_pet.trails.dto.WalkRecordMonthlyResponse;
 import hongik21.fit_a_pet.trails.dto.WalkRecordSaveRequest;
 import hongik21.fit_a_pet.trails.dto.WalkRecordSaveResponse;
@@ -39,6 +40,15 @@ public class WalkRecordController {
 
         List<WalkRecordMonthlyResponse> response = walkRecordService.getMonthlyRecords(email,year,month);
         return CommonResponse.onSuccess(response,"산책 기록 월별 조회에 성공했습니다.");
+    }
+
+    @GetMapping("/{recordId}")
+    public CommonResponse<WalkRecordDetailResponse> trailRecordDetail(@PathVariable Long recordId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();  // userName을 email로 설정했었음
+
+        WalkRecordDetailResponse response = walkRecordService.getRecordsDetail(recordId,email);
+        return CommonResponse.onSuccess(response,"산책 기록 단건 조회에 성공했습니다.");
     }
 
     @GetMapping("/doTest")
