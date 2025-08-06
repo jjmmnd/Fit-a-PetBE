@@ -6,6 +6,7 @@ import lombok.*;
 import org.apache.catalina.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -23,6 +24,9 @@ public class WalkRecord {
     private LocalDate walkDate;
     private LocalTime walkStart;
     private LocalTime walkEnd;
+
+    @Column(name = "duration", nullable = false)
+    private String formattedDuration;
 
     private Float distance;
     private Integer rating;

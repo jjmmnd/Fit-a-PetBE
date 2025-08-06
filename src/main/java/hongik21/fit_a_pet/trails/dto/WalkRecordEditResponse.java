@@ -15,6 +15,7 @@ public class WalkRecordEditResponse {
     private String walkDate;
     private String walkStart;
     private String walkEnd;
+    private String formattedDuration;
     private Float distance;
     private Integer petId;
     private String address;
