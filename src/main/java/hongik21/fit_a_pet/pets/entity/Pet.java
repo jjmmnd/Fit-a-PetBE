@@ -40,5 +40,6 @@ public class Pet {
 
     /** 성향 리스트 조회용*/
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<PetTraitRelation> traits = new ArrayList<>();
 }
