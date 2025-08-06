@@ -30,7 +30,7 @@ public class JoinRequest {
     @Size(min = 5, max = 15)
     @Pattern(
             regexp = "^[a-zA-Z0-9_]{5,15}",
-            message = "비밀번호는 영어 대소문자, 숫자, 언더바로 구성돼야 합니다."
+            message = "닉네임은 영어 대소문자, 숫자, 언더바로 구성돼야 합니다."
     )
     private String nickname;
 }
