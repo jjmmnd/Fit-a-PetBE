@@ -2,10 +2,20 @@ package hongik21.fit_a_pet.pets.entity;
 
 import hongik21.fit_a_pet.accounts.entity.Member;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +37,8 @@ public class Pet {
     /** 펫 삭제일*/
     @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime deletedAt;
+
+    /** 성향 리스트 조회용*/
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PetTraitRelation> traits = new ArrayList<>();
 }
