@@ -11,6 +11,7 @@ import hongik21.fit_a_pet.trails.repository.WalkRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -28,12 +29,22 @@ public class WalkRecordService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
 
+        LocalTime walkStart = LocalTime.parse(request.getWalkStart());
+        LocalTime walkEnd = LocalTime.parse(request.getWalkEnd());
+        Duration duration = Duration.between(walkStart,walkEnd);
+        String formattedDuration = String.format("%02d:%02d:%02d",
+                duration.getSeconds() / 3600,
+                (duration.getSeconds() % 3600) / 60,
+                duration.getSeconds() % 60
+        );
+
         WalkRecord walkRecord = WalkRecord.builder()
                 .memberId(member)
                 .petId(request.getPetId())
                 .walkDate(LocalDate.parse(request.getWalkDate()))
                 .walkStart(LocalTime.parse(request.getWalkStart()))
                 .walkEnd(LocalTime.parse(request.getWalkEnd()))
+                .formattedDuration(formattedDuration)
                 .distance(request.getDistance())
                 .address(request.getAddress())
                 .memo(request.getMemo())
@@ -47,6 +58,7 @@ public class WalkRecordService {
                     .walkDate(res.getWalkDate().toString())
                     .walkStart(res.getWalkStart().toString())
                     .walkEnd(res.getWalkEnd().toString())
+                    .formattedDuration(formattedDuration)
                     .distance(res.getDistance())
                     .petId(res.getPetId())
                     .address(res.getAddress())
@@ -75,6 +87,7 @@ public class WalkRecordService {
                             r.getWalkDate().toString(),
                             r.getWalkStart().toString(),
                             r.getWalkEnd().toString(),
+                            r.getFormattedDuration(),
                             r.getDistance(),
                             r.getPetId(),
                             r.getAddress(),
@@ -100,6 +113,7 @@ public class WalkRecordService {
                     .walkDate(walkRecord.getWalkDate().toString())
                     .walkStart(walkRecord.getWalkStart().toString())
                     .walkEnd(walkRecord.getWalkEnd().toString())
+                    .formattedDuration(walkRecord.getFormattedDuration())
                     .distance(walkRecord.getDistance())
                     .petId(walkRecord.getPetId())
                     .address(walkRecord.getAddress())
@@ -123,6 +137,7 @@ public class WalkRecordService {
                     .walkDate(walkRecord.getWalkDate().toString())
                     .walkStart(walkRecord.getWalkStart().toString())
                     .walkEnd(walkRecord.getWalkEnd().toString())
+                    .formattedDuration(walkRecord.getFormattedDuration())
                     .distance(walkRecord.getDistance())
                     .petId(walkRecord.getPetId())
                     .address(walkRecord.getAddress())
