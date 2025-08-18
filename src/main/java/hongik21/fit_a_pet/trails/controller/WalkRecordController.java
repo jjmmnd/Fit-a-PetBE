@@ -55,7 +55,6 @@ public class WalkRecordController {
     }
 
 
-
     @PutMapping("/{recordId}")
     public CommonResponse<WalkRecordEditResponse> editTrailRecord(
             @RequestBody WalkRecordEditRequest request,
