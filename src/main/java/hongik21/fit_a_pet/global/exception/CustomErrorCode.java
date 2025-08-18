@@ -27,7 +27,12 @@ public enum CustomErrorCode {
 
     // 4000: Trail Error
     TRAIL_CREATE_FAILED(HttpStatus.BAD_REQUEST, 4000, "산책 기록 생성에 실패했습니다."),
-    TRAIL_NOT_FOUND(HttpStatus.BAD_REQUEST,4001, "산책 기록을 찾을 수 없습니다.")
+    TRAIL_NOT_FOUND(HttpStatus.BAD_REQUEST,4001, "산책 기록을 찾을 수 없습니다."),
+
+    // 5000 : Post Error
+    POST_WRITE_FAILED(HttpStatus.BAD_REQUEST, 5000, "포스트 작성에 실패했습니다."),
+    POST_NOT_FOUND(HttpStatus.BAD_REQUEST, 5001, "포스트를 찾을 수 없습니다.")
+
     ;
 
     private final HttpStatus status;

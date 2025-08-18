@@ -3,10 +3,6 @@ package hongik21.fit_a_pet.trails.domain;
 import hongik21.fit_a_pet.accounts.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.User;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

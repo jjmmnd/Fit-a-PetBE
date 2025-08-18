@@ -1,0 +1,59 @@
+package hongik21.fit_a_pet.posts.controller;
+
+import hongik21.fit_a_pet.global.CommonResponse;
+import hongik21.fit_a_pet.global.exception.ApplicationException;
+import hongik21.fit_a_pet.posts.dto.PostEditRequest;
+import hongik21.fit_a_pet.posts.dto.PostEditResponse;
+import hongik21.fit_a_pet.posts.dto.PostWriteRequest;
+import hongik21.fit_a_pet.posts.dto.PostWriteResponse;
+import hongik21.fit_a_pet.posts.repository.PostRepository;
+import hongik21.fit_a_pet.posts.service.PostService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/posts")
+public class PostController {
+
+    private final PostService postService;
+    private final PostRepository postRepository;
+
+    @PostMapping()
+    public CommonResponse<PostWriteResponse> write(
+            @RequestBody PostWriteRequest request) throws ApplicationException{
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        PostWriteResponse response = postService.write(email, request);
+        return CommonResponse.onSuccess(response,"포스트 작성에 성공했습니다");
+    }
+
+    @PutMapping("/{postId}")
+    public CommonResponse<PostEditResponse> editPost(
+            @RequestBody PostEditRequest request,
+            @PathVariable("postId") Long postId) throws ApplicationException{
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        PostEditResponse response = postService.editPost(request, postId, email);
+        return CommonResponse.onSuccess(response,"포스트 수정에 성공했습니다.");
+    }
+
+
+    @DeleteMapping("/{postId}")
+    public CommonResponse<PostWriteResponse> deletePost(@PathVariable("postId")  Long postId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        postService.deletePost(postId, email);
+        return CommonResponse.onSuccess(null, "포스트 삭제에 성공했습니다.");
+    }
+
+    @GetMapping("/doTest")
+    public String doTest(){
+        System.out.println("test");
+        return "테스트 성공";
+    }
+}
