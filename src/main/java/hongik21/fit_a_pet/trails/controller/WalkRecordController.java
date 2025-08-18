@@ -46,7 +46,7 @@ public class WalkRecordController {
 
 
     @GetMapping("/{recordId}")
-    public CommonResponse<WalkRecordDetailResponse> trailRecordDetail(@PathVariable Long recordId){
+    public CommonResponse<WalkRecordDetailResponse> trailRecordDetail(@PathVariable("recordId") Long recordId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();  // userName을 email로 설정했었음
 
@@ -58,7 +58,7 @@ public class WalkRecordController {
     @PutMapping("/{recordId}")
     public CommonResponse<WalkRecordEditResponse> editTrailRecord(
             @RequestBody WalkRecordEditRequest request,
-            @PathVariable Long recordId) throws ApplicationException {
+            @PathVariable("recordId") Long recordId) throws ApplicationException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
 
@@ -68,7 +68,7 @@ public class WalkRecordController {
 
 
     @DeleteMapping("/{recordId}")
-    public CommonResponse<?> deleteTrailRecord(@PathVariable Long recordId){
+    public CommonResponse<?> deleteTrailRecord(@PathVariable("recordId")  Long recordId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
 
