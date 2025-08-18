@@ -132,17 +132,22 @@ public class WalkRecordService {
                 .orElseThrow(()-> new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
 
         try{
+            walkRecord.setMemo(request.getMemo());
+            walkRecord.setRating(request.getRating());
+
+            WalkRecord updatedRecord = repository.save(walkRecord);
+
             return WalkRecordEditResponse.builder()
-                    .recordId(walkRecord.getRecordId())
-                    .walkDate(walkRecord.getWalkDate().toString())
-                    .walkStart(walkRecord.getWalkStart().toString())
-                    .walkEnd(walkRecord.getWalkEnd().toString())
-                    .formattedDuration(walkRecord.getFormattedDuration())
-                    .distance(walkRecord.getDistance())
-                    .petId(walkRecord.getPetId())
-                    .address(walkRecord.getAddress())
-                    .rating(request.getRating())
-                    .memo(request.getMemo())
+                    .recordId(updatedRecord.getRecordId())
+                    .walkDate(updatedRecord.getWalkDate().toString())
+                    .walkStart(updatedRecord.getWalkStart().toString())
+                    .walkEnd(updatedRecord.getWalkEnd().toString())
+                    .formattedDuration(updatedRecord.getFormattedDuration())
+                    .distance(updatedRecord.getDistance())
+                    .petId(updatedRecord.getPetId())
+                    .address(updatedRecord.getAddress())
+                    .rating(updatedRecord.getRating())
+                    .memo(updatedRecord.getMemo())
                     .build();
 
         }catch (Exception e){
