@@ -2,10 +2,7 @@ package hongik21.fit_a_pet.posts.controller;
 
 import hongik21.fit_a_pet.global.CommonResponse;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
-import hongik21.fit_a_pet.posts.dto.PostEditRequest;
-import hongik21.fit_a_pet.posts.dto.PostEditResponse;
-import hongik21.fit_a_pet.posts.dto.PostWriteRequest;
-import hongik21.fit_a_pet.posts.dto.PostWriteResponse;
+import hongik21.fit_a_pet.posts.dto.*;
 import hongik21.fit_a_pet.posts.repository.PostRepository;
 import hongik21.fit_a_pet.posts.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +48,15 @@ public class PostController {
         return CommonResponse.onSuccess(null, "포스트 삭제에 성공했습니다.");
     }
 
+    @GetMapping("/{postId}")
+    public CommonResponse<PostDetailResponse> viewPost(@PathVariable("postId") Long postId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        PostDetailResponse response = postService.viewPost(postId);
+        return CommonResponse.onSuccess(response,"포스트 조회에 성공했습니다.");
+
+    }
     @GetMapping("/doTest")
     public String doTest(){
         System.out.println("test");
