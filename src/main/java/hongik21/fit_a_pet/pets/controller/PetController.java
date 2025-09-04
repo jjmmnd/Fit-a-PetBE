@@ -1,0 +1,34 @@
+package hongik21.fit_a_pet.pets.controller;
+
+import hongik21.fit_a_pet.accounts.entity.Member;
+import hongik21.fit_a_pet.accounts.service.MemberService;
+import hongik21.fit_a_pet.global.CommonResponse;
+import hongik21.fit_a_pet.pets.dto.PetInfo;
+import hongik21.fit_a_pet.pets.dto.PetJoinRequest;
+import hongik21.fit_a_pet.pets.service.PetService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/mypage/pet")
+@RequiredArgsConstructor
+public class PetController {
+
+    private final MemberService memberService;
+    private final PetService petService;
+
+    @PostMapping
+    public CommonResponse<PetInfo> createPet(@RequestBody PetJoinRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();  // 로그인한 사용자의 이메일
+        Member member = memberService.getMemberByEmail(email);
+        PetInfo response = petService.createPet(member, request);
+        return CommonResponse.onSuccess(response, "펫 생성에 성공했습니다.");
+    }
+}

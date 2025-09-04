@@ -3,9 +3,7 @@ package hongik21.fit_a_pet.pets.service;
 import hongik21.fit_a_pet.accounts.entity.Member;
 import hongik21.fit_a_pet.pets.dto.PetInfo;
 import hongik21.fit_a_pet.pets.dto.PetJoinRequest;
-import hongik21.fit_a_pet.pets.entity.Pet;
-import hongik21.fit_a_pet.pets.entity.PetTrait;
-import hongik21.fit_a_pet.pets.entity.PetTraitRelation;
+import hongik21.fit_a_pet.pets.entity.*;
 import hongik21.fit_a_pet.pets.repository.PetRepository;
 import hongik21.fit_a_pet.pets.repository.PetTraitRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +31,29 @@ public class PetService {
     public PetInfo createPet(Member member, PetJoinRequest request) {
         Pet pet = Pet.builder()
                 .name(request.getName())
+                .age(request.getAge())
+                .weight(request.getWeight())
                 .image(request.getImage())
                 .member(member)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        if (request.getTraitIds() != null && !request.getTraitIds().isEmpty()) {
-            List<PetTrait> traits = petTraitRepository.findAllById(request.getTraitIds());
+        // 1. petType
+        if(request.getPetType() != null && !request.getPetType().isEmpty()) {
+            String upperCase = request.getPetType().toUpperCase();
+            pet.setType(PetType.valueOf(upperCase));
+        }
+
+        // 2. genderType
+        if(request.getGenderType() != null && !request.getGenderType().isEmpty()) {
+            String upperCase = request.getGenderType().toUpperCase();
+            pet.setGender(PetGenderType.valueOf(upperCase));
+        }
+
+        // 3. 성향
+        if (request.getTraitNames() != null && !request.getTraitNames().isEmpty()) {
+            List<String> traitNames = request.getTraitNames();
+            List<PetTrait> traits = petTraitRepository.findAllByNameIn(traitNames);
 
             for (PetTrait trait : traits) {
                 PetTraitRelation relation = new PetTraitRelation();

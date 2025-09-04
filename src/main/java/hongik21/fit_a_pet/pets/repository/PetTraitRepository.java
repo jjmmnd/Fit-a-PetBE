@@ -4,6 +4,9 @@ import hongik21.fit_a_pet.pets.entity.PetTrait;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PetTraitRepository extends JpaRepository<PetTrait, Long> {
+    List<PetTrait> findAllByNameIn(List<String> traitNames);
 }

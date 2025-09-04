@@ -9,6 +9,10 @@ import java.util.List;
 @Getter
 public class PetJoinRequest {
     private String name;
+    private Integer age;
+    private Double weight;
+    private String genderType;
+    private String petType;
     private String image;
-    private List<Long> traitIds;
+    private List<String> traitNames;
 }
