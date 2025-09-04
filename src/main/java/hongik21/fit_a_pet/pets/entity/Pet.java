@@ -24,6 +24,19 @@ public class Pet {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private Integer age;
+
+    @Column(nullable = false, name = "gender_type")
+    @Enumerated(EnumType.STRING)
+    private PetGenderType gender;
+
+    private Double weight;
+
+    @Column(nullable = false, name = "pet_type")
+    @Enumerated(EnumType.STRING)
+    private PetType type;
+
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)
