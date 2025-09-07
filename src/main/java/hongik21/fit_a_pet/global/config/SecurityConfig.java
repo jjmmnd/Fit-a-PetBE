@@ -72,7 +72,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/signup/**").permitAll()
                         .requestMatchers("/api/users/email/**").permitAll()
                         .requestMatchers("/api/users/logout").authenticated()
-                        .requestMatchers("/api/**").permitAll() // 나중에 알아서 추가 ..
+                        .requestMatchers("/api/mypage/**").authenticated()
                         .anyRequest().authenticated()
         );
 

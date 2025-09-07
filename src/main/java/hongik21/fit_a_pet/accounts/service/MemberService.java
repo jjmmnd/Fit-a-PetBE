@@ -171,4 +171,9 @@ public class MemberService {
         // 토큰 무효화
         refreshTokenService.delete(memberId);
     }
+
+    public Member getMemberByEmail(String email) throws ApplicationException {
+        return memberRepository.findByEmail(email).orElseThrow(()->
+                new ApplicationException(CustomErrorCode.MEMBER_NOT_FOUND));
+    }
 }
