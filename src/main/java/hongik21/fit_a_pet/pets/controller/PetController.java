@@ -5,15 +5,13 @@ import hongik21.fit_a_pet.accounts.service.MemberService;
 import hongik21.fit_a_pet.global.CommonResponse;
 import hongik21.fit_a_pet.pets.dto.PetInfo;
 import hongik21.fit_a_pet.pets.dto.PetJoinRequest;
+import hongik21.fit_a_pet.pets.entity.Pet;
 import hongik21.fit_a_pet.pets.service.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,11 +32,21 @@ public class PetController {
         return CommonResponse.onSuccess(response, "펫 생성에 성공");
     }
 
+    @GetMapping
     public CommonResponse<List<PetInfo>> getPet() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();  // 로그인한 사용자의 이메일
         Member member = memberService.getMemberByEmail(email);
         List<PetInfo> response = petService.getPetsByMember(member);
         return CommonResponse.onSuccess(response, "펫 조회 성공");
+    }
+
+    @PutMapping("/{pet_id}")
+    public CommonResponse<PetInfo> updatePet(@PathVariable Long pet_id, @RequestBody PetJoinRequest request) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String email = auth.getName();
+//        Member member = memberService.getMemberByEmail(email);
+        PetInfo response = petService.updatePet(pet_id, request);
+        return CommonResponse.onSuccess(response, "펫 편집 성공");
     }
 }
