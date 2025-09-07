@@ -2,10 +2,12 @@ package hongik21.fit_a_pet.pets.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 import java.util.List;
 
+@Data
 @Getter
 public class PetJoinRequest {
     private String name;

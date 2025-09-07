@@ -30,7 +30,7 @@ public class PetController {
         String email = auth.getName();  // 로그인한 사용자의 이메일
         Member member = memberService.getMemberByEmail(email);
         PetInfo response = petService.createPet(member, request);
-        return CommonResponse.onSuccess(response, "펫 생성에 성공");
+        return CommonResponse.onSuccess(response, "펫 생성 성공");
     }
 
     @GetMapping
@@ -43,7 +43,7 @@ public class PetController {
     }
 
     @PutMapping("/{pet_id}")
-    public CommonResponse<PetInfo> updatePet(@PathVariable Long pet_id, @RequestBody PetJoinRequest request) {
+    public CommonResponse<PetInfo> updatePet(@PathVariable("pet_id") Long pet_id, @RequestBody PetJoinRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         Member member = memberService.getMemberByEmail(email);
