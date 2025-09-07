@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/mypage/pet")
 @RequiredArgsConstructor
@@ -29,6 +31,14 @@ public class PetController {
         String email = auth.getName();  // 로그인한 사용자의 이메일
         Member member = memberService.getMemberByEmail(email);
         PetInfo response = petService.createPet(member, request);
-        return CommonResponse.onSuccess(response, "펫 생성에 성공했습니다.");
+        return CommonResponse.onSuccess(response, "펫 생성에 성공");
+    }
+
+    public CommonResponse<List<PetInfo>> getPet() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();  // 로그인한 사용자의 이메일
+        Member member = memberService.getMemberByEmail(email);
+        List<PetInfo> response = petService.getPetsByMember(member);
+        return CommonResponse.onSuccess(response, "펫 조회 성공");
     }
 }
