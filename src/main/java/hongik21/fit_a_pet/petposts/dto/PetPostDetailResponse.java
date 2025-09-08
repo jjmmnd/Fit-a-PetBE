@@ -3,24 +3,24 @@ package hongik21.fit_a_pet.petposts.dto;
 import hongik21.fit_a_pet.petposts.domain.PetPostCategoryType;
 import hongik21.fit_a_pet.pets.entity.PetGenderType;
 import hongik21.fit_a_pet.pets.entity.PetType;
-import hongik21.fit_a_pet.posts.domain.PostCategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetPostEditResponse {
+public class PetPostDetailResponse {
 
     private Long petPostId;
     private String petPostTitle;
     private String petPostContent;
     private PetPostCategoryType petPostCategory;
-    private LocalDateTime petPostEditDate;
+    private LocalDateTime petPostDate;
 
     private String nickname;
     private String petName;
@@ -28,5 +28,6 @@ public class PetPostEditResponse {
     private PetGenderType petGender;
     private PetType petType;
     private String petTraits;
+
     private String imageUrl;
 }

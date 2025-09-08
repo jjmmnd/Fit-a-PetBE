@@ -28,13 +28,16 @@ public class PetPost {
     private LocalDateTime petPostDate;
     private LocalDateTime petPostEditDate;
 
+    // 멤버 조회용
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    // 펫 조회용
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
-    // 펫 성향 필요
+    // 이미지
+    private String imageUrl;
 }

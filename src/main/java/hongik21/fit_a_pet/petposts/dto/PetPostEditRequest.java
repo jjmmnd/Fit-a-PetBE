@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 @Getter
 public class PetPostEditRequest {
 
-//    private Long petId;
     private String petPostTitle;
     private LocalDateTime petPostEditDate;
     private String petPostContent;
+    private String imageUrl;
 }

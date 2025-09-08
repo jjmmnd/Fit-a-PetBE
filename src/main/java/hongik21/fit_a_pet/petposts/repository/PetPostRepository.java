@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface PetPostRepository extends JpaRepository<PetPost, Long>{
 
     Optional<PetPost> findByPetPostIdAndMemberId_Email(Long petPostId, String email);
+
+    Optional<PetPost> findByPetPostId(Long petPostId);
 }
