@@ -21,6 +21,6 @@ public class ImageController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResponse<String> uploadFile(@RequestParam("file") MultipartFile file) {
         String path = imageService.uploadFile(file);
-        return CommonResponse.onSuccess(null, "S3 버킷에 이미지 업로드 성공");
+        return CommonResponse.onSuccess(path, "S3 버킷에 이미지 업로드 성공");
     }
 }
