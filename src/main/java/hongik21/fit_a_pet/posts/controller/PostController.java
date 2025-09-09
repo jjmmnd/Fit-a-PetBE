@@ -40,7 +40,7 @@ public class PostController {
 
 
     @DeleteMapping("/{postId}")
-    public CommonResponse<PostWriteResponse> deletePost(@PathVariable("postId")  Long postId){
+    public CommonResponse<?> deletePost(@PathVariable("postId")  Long postId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
 
