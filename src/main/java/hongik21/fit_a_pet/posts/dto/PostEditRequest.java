@@ -8,6 +8,5 @@ import java.time.LocalDateTime;
 public class PostEditRequest {
 
     private String postTitle;
-    private LocalDateTime postEditDate;
     private String postContent;
 }

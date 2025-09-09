@@ -10,6 +10,5 @@ public class PostWriteRequest {
 
     private String postTitle;
     private PostCategoryType postCategory;
-    private LocalDateTime postDate;
     private String postContent;
 }
