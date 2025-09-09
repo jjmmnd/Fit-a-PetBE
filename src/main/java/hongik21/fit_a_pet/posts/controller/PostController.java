@@ -2,6 +2,7 @@ package hongik21.fit_a_pet.posts.controller;
 
 import hongik21.fit_a_pet.global.CommonResponse;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
+import hongik21.fit_a_pet.posts.domain.PostCategoryType;
 import hongik21.fit_a_pet.posts.dto.*;
 import hongik21.fit_a_pet.posts.repository.PostRepository;
 import hongik21.fit_a_pet.posts.service.PostService;
@@ -9,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,7 +32,7 @@ public class PostController {
         return CommonResponse.onSuccess(response,"포스트 작성에 성공했습니다");
     }
 
-    @PutMapping("/{postId}")
+    @PutMapping("/{postId:\\d+}")
     public CommonResponse<PostEditResponse> editPost(
             @RequestBody PostEditRequest request,
             @PathVariable("postId") Long postId) throws ApplicationException{
@@ -39,8 +43,8 @@ public class PostController {
     }
 
 
-    @DeleteMapping("/{postId}")
-    public CommonResponse<PostWriteResponse> deletePost(@PathVariable("postId")  Long postId){
+    @DeleteMapping("/{postId:\\d+}")
+    public CommonResponse<?> deletePost(@PathVariable("postId")  Long postId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
 
@@ -48,15 +52,22 @@ public class PostController {
         return CommonResponse.onSuccess(null, "포스트 삭제에 성공했습니다.");
     }
 
-    @GetMapping("/{postId}")
+    @GetMapping("/{postId:\\d+}")
     public CommonResponse<PostDetailResponse> viewPost(@PathVariable("postId") Long postId){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
 
         PostDetailResponse response = postService.viewPost(postId);
         return CommonResponse.onSuccess(response,"포스트 조회에 성공했습니다.");
 
     }
+
+    @GetMapping
+    public CommonResponse<List<PostListResponse>> listPosts(
+            @RequestParam(name = "categoryType",required = false) PostCategoryType categoryType) {
+        List<PostListResponse> posts = postService.listPost(categoryType);
+
+        return CommonResponse.onSuccess(posts,"포스트 카테고리 조회에 성공했습니다.");
+    }
+
     @GetMapping("/doTest")
     public String doTest(){
         System.out.println("test");
