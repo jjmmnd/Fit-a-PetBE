@@ -22,7 +22,7 @@ public class CommentController {
 
     @PostMapping("/{postId}/comments")
     public CommonResponse<CommentInfo> createComment(
-            @PathVariable Long postId, @RequestBody CommentRequest request) {
+            @PathVariable("postId") Long postId, @RequestBody CommentRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         Member member = memberService.getMemberByEmail(email);
