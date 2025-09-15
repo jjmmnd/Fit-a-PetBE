@@ -36,8 +36,10 @@ public enum CustomErrorCode {
     // 6000 : PetPost Error
     PET_POST_WRITE_FAILED(HttpStatus.BAD_REQUEST, 6000, "펫포스트 작성에 실패했습니다."),
     PET_POST_NOT_FOUND(HttpStatus.NOT_FOUND, 6001, "펫포스트를 찾을 수 없습니다."),
-    PET_NOT_FOUND(HttpStatus.NOT_FOUND, 6002, "펫을 찾을 수 없습니다.")
-    ;
+    PET_NOT_FOUND(HttpStatus.NOT_FOUND, 6002, "펫을 찾을 수 없습니다."),
+
+    //7000: Comment Error
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, 7000, "댓글을 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final Integer code;

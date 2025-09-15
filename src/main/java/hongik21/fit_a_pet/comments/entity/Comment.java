@@ -39,4 +39,9 @@ public class Comment {
 
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+    public void update(String newComment) {
+        this.comment = newComment;
+        this.modifiedAt = LocalDateTime.now();
+    }
 }

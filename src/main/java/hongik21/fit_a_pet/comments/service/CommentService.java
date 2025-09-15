@@ -11,11 +11,13 @@ import hongik21.fit_a_pet.posts.domain.Post;
 import hongik21.fit_a_pet.posts.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
@@ -38,6 +40,33 @@ public class CommentService {
                 .commentId(savedComment.getId())
                 .comment(savedComment.getComment())
                 .lastModified(savedComment.getModifiedAt())
+                .build();
+    }
+
+    public CommentInfo updateComment(Member member, Long postId, Long commentId, CommentRequest request) {
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
+                new ApplicationException(CustomErrorCode.COMMENT_NOT_FOUND));
+
+        // 포스트가 존재하는지 확인
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new ApplicationException(CustomErrorCode.POST_NOT_FOUND));
+
+        // 해당 포스트에 달린 댓글이 맞는지 확인
+        if (!comment.getPost(). getPostId().equals(post.getPostId())) {
+            throw new ApplicationException(CustomErrorCode.FORBIDDEN);
+        }
+
+        // 댓글 작성자와 일치하는지 확인
+        if(!comment.getMember().getId().equals(member.getId()))
+            throw new ApplicationException(CustomErrorCode.FORBIDDEN);
+
+        comment.update(request.getComment());
+
+        return CommentInfo.builder()
+                .commentId(commentId)
+                .comment(comment.getComment())
+                .lastModified(comment.getModifiedAt())
                 .build();
     }
 }
