@@ -3,12 +3,20 @@ package hongik21.fit_a_pet.comments.entity;
 import hongik21.fit_a_pet.accounts.entity.Member;
 import hongik21.fit_a_pet.posts.domain.Post;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class Comment {
 
     @Id
