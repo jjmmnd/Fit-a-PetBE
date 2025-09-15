@@ -69,4 +69,15 @@ public class CommentService {
                 .lastModified(comment.getModifiedAt())
                 .build();
     }
+
+    public void deleteComment(Member member, Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
+                new ApplicationException(CustomErrorCode.COMMENT_NOT_FOUND));
+
+        // 댓글 작성자와 일치하는지 확인
+        if(!comment.getMember().getId().equals(member.getId()))
+            throw new ApplicationException(CustomErrorCode.FORBIDDEN);
+
+        commentRepository.delete(comment);
+    }
 }
