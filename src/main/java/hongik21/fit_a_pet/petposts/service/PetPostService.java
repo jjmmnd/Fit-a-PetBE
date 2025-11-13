@@ -159,4 +159,58 @@ public class PetPostService {
     }
 
 
+    // db에 있는 전체 포스트 조회
+    @Transactional(readOnly = true)
+    public List<PetPostDetailResponse> getAllPosts() {
+        List<PetPost> all = petPostRepository.findAll();
+
+        return all.stream()
+                .map(post -> PetPostDetailResponse.builder()
+                        .petPostId(post.getPetPostId())
+                        .petPostTitle(post.getPetPostTitle())
+                        .petPostContent(post.getPetPostContent())
+                        .petPostCategory(post.getPetPostCategory())
+                        .petPostDate(post.getPetPostEditDate())
+                        .nickname(post.getMember().getNickname())
+                        .petName(post.getPet().getName())
+                        .petAge(post.getPet().getAge())
+                        .petGender(post.getPet().getGender())
+                        .petType(post.getPet().getType())
+                        .petTraits(post.getPet().getTraits().stream()
+                                .map(petTraitRelation -> petTraitRelation.getTrait().getName())
+                                .collect(Collectors.joining(", ")))
+                        .imageUrl(post.getImageUrl())
+                        .build()
+                ).toList();
+
+    }
+
+    // 로그인 유저가 작성한 petPost 조회
+    @Transactional(readOnly = true)
+    public List<PetPostDetailResponse> getPetPostsByEmail(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new ApplicationException(CustomErrorCode.PET_POST_NOT_FOUND));
+
+        List<PetPost> posts = petPostRepository.findByMemberIdWithDetails(member.getId());
+
+        return posts.stream()
+                .map(post -> PetPostDetailResponse.builder()
+                        .petPostId(post.getPetPostId())
+                        .petPostTitle(post.getPetPostTitle())
+                        .petPostContent(post.getPetPostContent())
+                        .petPostCategory(post.getPetPostCategory())
+                        .petPostDate(post.getPetPostEditDate())
+                        .nickname(post.getMember().getNickname())
+                        .petName(post.getPet().getName())
+                        .petAge(post.getPet().getAge())
+                        .petGender(post.getPet().getGender())
+                        .petType(post.getPet().getType())
+                        .petTraits(post.getPet().getTraits().stream()
+                                .map(petTraitRelation -> petTraitRelation.getTrait().getName())
+                                .collect(Collectors.joining(", ")))
+                        .imageUrl(post.getImageUrl())
+                        .build()
+                ).toList();
+
+    }
 }

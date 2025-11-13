@@ -2,6 +2,7 @@ package hongik21.fit_a_pet.petposts.controller;
 
 import hongik21.fit_a_pet.global.CommonResponse;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
+import hongik21.fit_a_pet.petposts.domain.PetPost;
 import hongik21.fit_a_pet.petposts.dto.*;
 import hongik21.fit_a_pet.petposts.service.PetPostService;
 import hongik21.fit_a_pet.posts.dto.PostWriteResponse;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -63,6 +66,22 @@ public class PetPostController {
     public String doTest(){
         System.out.println("test");
         return "테스트 성공";
+    }
+
+    @GetMapping("/all")
+    public CommonResponse<?> getAllPetPosts(){
+        List<PetPostDetailResponse> response = petPostService.getAllPosts();
+        return CommonResponse.onSuccess(response,"모든 펫 포스트 조회 성공");
+    }
+
+    @GetMapping("/user")
+    public CommonResponse<?> getPetPostsByUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        List<PetPostDetailResponse> response = petPostService.getPetPostsByEmail(email);
+        return CommonResponse.onSuccess(response,"로그인한 사용자가 작성한 포스트 조회 성공");
+
     }
 
 }
