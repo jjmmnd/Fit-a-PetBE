@@ -8,6 +8,7 @@ import hongik21.fit_a_pet.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -66,16 +67,16 @@ public class SecurityConfig {
         // 요청 URI 권한 설정
         http.authorizeHttpRequests((authorize)->
                 authorize
+                        .requestMatchers("/api/users/logout").authenticated()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/", "/error/**").permitAll()
                         // 로그인 및 가입 로직
                         .requestMatchers("/api/users/login/**").permitAll()
                         .requestMatchers("/api/users/signup/**").permitAll()
                         .requestMatchers("/api/users/email/**").permitAll()
-                        .requestMatchers("/api/users/**").permitAll()
+                        // 그 외
                         .requestMatchers("/api/image/upload").permitAll()
                         .requestMatchers("/petposts/all").permitAll()
-                        .requestMatchers("/api/users/logout").authenticated()
-                        .requestMatchers("/api/mypage/**").authenticated()
                         .anyRequest().authenticated()
         );
 
