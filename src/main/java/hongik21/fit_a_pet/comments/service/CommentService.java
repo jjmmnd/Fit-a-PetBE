@@ -7,6 +7,8 @@ import hongik21.fit_a_pet.comments.entity.Comment;
 import hongik21.fit_a_pet.comments.repository.CommentRepository;
 import hongik21.fit_a_pet.global.exception.ApplicationException;
 import hongik21.fit_a_pet.global.exception.CustomErrorCode;
+import hongik21.fit_a_pet.petposts.domain.PetPost;
+import hongik21.fit_a_pet.petposts.dto.PetPostDetailResponse;
 import hongik21.fit_a_pet.posts.domain.Post;
 import hongik21.fit_a_pet.posts.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +83,21 @@ public class CommentService {
             throw new ApplicationException(CustomErrorCode.FORBIDDEN);
 
         commentRepository.delete(comment);
+    }
+
+    public List<CommentInfo> getComments(Long postId) {
+        // 포스트가 존재하는지 확인
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new ApplicationException(CustomErrorCode.POST_NOT_FOUND));
+
+        List<Comment> comments = commentRepository.findByPost(post);
+
+        return comments.stream()
+                .map(comment -> CommentInfo.builder()
+                        .comment(comment.getComment())
+                        .lastModified(comment.getModifiedAt())
+                        .commentId(comment.getId())
+                        .build()).toList();
+
     }
 }

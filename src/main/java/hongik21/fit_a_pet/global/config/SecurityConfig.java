@@ -77,6 +77,7 @@ public class SecurityConfig {
                         // 그 외
                         .requestMatchers("/api/image/upload").permitAll()
                         .requestMatchers("/petposts/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/posts/*/comments").permitAll()
                         .anyRequest().authenticated()
         );
 

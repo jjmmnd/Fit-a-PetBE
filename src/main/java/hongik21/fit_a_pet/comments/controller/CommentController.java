@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -55,5 +57,13 @@ public class CommentController {
         Member member = memberService.getMemberByEmail(email);
         commentService.deleteComment(member, commentId);
         return ResponseEntity.ok("댓글 삭제 성공");
+    }
+
+    @GetMapping("/posts/{post_id}/comments")
+    public CommonResponse<?> getComments(
+            @PathVariable("post_id") Long postId
+    ) {
+        List<CommentInfo> comments = commentService.getComments(postId);
+        return CommonResponse.onSuccess(comments, "댓글 조회 성공!");
     }
 }
