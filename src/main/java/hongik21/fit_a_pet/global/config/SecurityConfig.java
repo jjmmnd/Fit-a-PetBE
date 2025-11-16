@@ -94,7 +94,7 @@ public class SecurityConfig {
 
         // 인증정보 주고받도록 허용
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:3000")); // 기본
+        config.setAllowedOrigins(List.of("http://localhost:3000", "https://fitapet.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("*"));
