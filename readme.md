@@ -87,3 +87,9 @@ Fit-a-Pet 서비스의 백엔드 레포지토리입니다.
 
 **사용 기술**
 - Spring Security, JWT, Spring Mail (SMTP), JPA
+
+<br>
+
+
+## 🔗 링크
+- **Frontend GitHub**: https://github.com/umhye1/Fit-a-PetFE
